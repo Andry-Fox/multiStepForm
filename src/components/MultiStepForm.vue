@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" @click.self="close">
     <article>
       <header>
         <button v-if="activeStep -1 >= 0" @click="backStep">Вернутся</button>
@@ -7,7 +7,7 @@
 
           <div class="progress-step"
           :class="{'active':index === activeStep}"
-          v-for="(step, index) in formSteps"
+          v-for="index in formSteps"
           :key="'step'+index">
             {{ index + 1 }}
           </div>
@@ -15,26 +15,53 @@
         <button v-if="activeStep +1 < formSteps.length" @click="checkValid">Продолжить</button>
         <button v-if="activeStep +1 === formSteps.length" @click="checkValid">Отправить</button>
       </header>
-      <section :class="animation">
+
+      <section :class="animation" v-if="activeStep === 0">
         <h2>{{ formSteps[activeStep].title }}</h2>
-        <div class="input-fields">
-          <div class="input-container"
-          v-for="(field, index) in formSteps[activeStep].fields"
-          :key="'field'+ index">
-            <input type="text" :class="{'wrong-input': !field.valid}" v-model="field.value" required>
-            <label class="input-label">{{ field.label }}</label>
+        <div class="form-box">
+          <div class="input-fields">
+              <vueInput :fields="formSteps[activeStep].fields"/>
           </div>
-        </div>
-        <div class="checkbox-fields">
           <div class="checkbox-container">
-            <span class="h2">Ваш пол:</span>
-            <div class="checkbox"
-                 v-for="(checkbox, index) in formSteps[activeStep].checkbox"
-                 :key="'checkbox'+ index">
-              <input type="checkbox" v-model="checkbox.value" required>
-              <label class="checkbox-label">{{ checkbox.label }}</label>
+            <span>{{formSteps[activeStep].subtitle}}</span>
+            <div class="flex__checkbox">
+              <div class="checkbox"
+                   v-for="(checkboxParam, index) in formSteps[activeStep].checkboxParam"
+                   :key="'checkbox'+ index">
+                <vue-checkbox>{{checkboxParam.label}}</vue-checkbox>
+              </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section :class="animation" v-if="activeStep === 1">
+        <h2>{{ formSteps[activeStep].title }}</h2>
+        <div class="form-box">
+          <div class="">
+            <vueSelect
+              :options="formSteps[activeStep].options"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section :class="animation" v-if="activeStep === 2">
+        <h2>{{ formSteps[activeStep].title }}</h2>
+        <div class="form-box">
+
+        </div>
+      </section>
+      <section :class="animation" v-if="activeStep === 3">
+        <h2>{{ formSteps[activeStep].title }}</h2>
+        <div class="form-box">
+
+        </div>
+      </section>
+      <section :class="animation" v-if="activeStep === 4">
+        <h2>{{ formSteps[activeStep].title }}</h2>
+        <div class="form-box">
+
         </div>
       </section>
     </article>
@@ -42,8 +69,11 @@
 </template>
 
 <script>
-
+import vueCheckbox from "@/components/customComponents/v-checkbox.vue"
+import vueSelect from "@/components/customComponents/select.vue"
+import vueInput from "@/components/customComponents/v-input.vue"
 export default {
+  components: {vueSelect, vueCheckbox, vueInput},
   data: () => {
     return {
       activeStep:0,
@@ -52,26 +82,42 @@ export default {
         {
           title: "Личная информация",
           fields: [
-            {label: "Фамилия", value: '', valid:true,pattern:/^[a-zA-Zа-яА-Я]+$/ui,required:true},
-            {label: "Имя", value: '', valid:true,pattern:/^[a-zA-Zа-яА-Я]+$/ui,required:true},
-            {label: "email", value: '', valid:true,pattern:/^[А-ЯA-Z0-9._%+-]+@[А-ЯA-Z0-9-]+.+.[A-Z]{2,4}$/i},
-            {label: "Дата рождения", value: '', valid:true,pattern:/.+/,required:true},
-            {label: "Номер телефона", value: '+7', valid:true,pattern:/.+/,required:true},
+            {label: "Фамилия:", value: '', valid:true,pattern:'[A-Za-zА-Яа-я]{3,}',required:true, type: 'text'},
+            {label: "Имя:", value: '', valid:true,pattern:'[A-Za-zА-Яа-я]{3,}',required:true, type:'text'},
+            {label: "Email:", value: '', valid:true,pattern:'/^[А-ЯA-Z0-9._%+-]+@[А-ЯA-Z0-9-]+.+.[A-Z]{2,4}$/i',required:false, type:'email'},
+            {label: "Дата рождения:", value: '', valid:true,pattern:/.+/,required:true, type:'date'},
+            {label: "Номер телефона:", value: '', valid:true,pattern:/.+/,required:true, type:'text'},
           ],
-          checkbox: [
+          subtitle: "Ваш пол:",
+          checkboxParam: [
             {label: "М"},
             {label: "Ж"},
           ],
         },
         {
           title: "Информация о кандидате",
-          fields: [
-            {label: "Some some some some some", value: '', valid:true,pattern:/.+/},
-            {label: "Some some some some some", value: '', valid:true,pattern:/.+/},
-            {label: "Some some some some some", value: '', valid:true,pattern:/.+/},
-            {label: "Some some some some some", value: '', valid:true,pattern:/.+/},
-            {label: "Some some some some some", value: '', valid:true,pattern:/.+/},
-          ]
+          fields: [],
+          options: [
+            {value: 'Среднее', id:1},
+            {value: 'Средне-специальное',id:2},
+            {value: 'Неоконченное высшее',id:3},
+            {value: 'Бакалавр',id:4},
+            {value: 'Магистрант',id:5},
+            {value: 'Аспирант',id:6},
+          ],
+          multiSelector: {name: "Знакомые фреймворки:"},
+          multiOptions: [
+            {value: 'Среднее',},
+            {value: 'Средне-специальное',},
+            {value: 'Неоконченное высшее',},
+            {value: 'Бакалавр',},
+            {value: 'Магистрант',},
+            {value: 'Аспирант',},
+          ],
+          h2: "Смс оповещение:",
+          checkbox: [
+            {label: ""},
+          ],
         },
         {
           title: "Опыт работы",
@@ -241,6 +287,14 @@ export default {
       box-shadow: 0 15px 30px rgba(0,0,0,.2),
                   0 10px 20px rgb(0 0 0 / 20%);
 
+      .form-box {
+        flex-grow: 1;
+        width: 100%;
+
+        @include flexbox();
+        flex-direction: column;
+      }
+
       h2 {
         font-size: 1.6rem;
         color: #5b2d82;
@@ -252,20 +306,17 @@ export default {
         flex-direction: column;
         width: 100%;
       }
-      .checkbox-fields {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        width: 100%;
-      }
+
       .checkbox-container {
         display: flex;
         align-items: center;
-        padding: 20px 20px 20px 20px;
-        width: calc(100% - 40px);
-        max-width: 400px;
+        padding: 20px 0;
+        min-width: 250px;
 
+        .flex__checkbox {
+          display: flex;
+          flex-grow: 1;
+        }
         .h2 {
           font-family: 'Noto Serif', serif;
           font-size: 1.35rem;
@@ -273,50 +324,13 @@ export default {
         }
 
         .checkbox {
-          padding-left: 15px;
-          font-family: 'Noto Serif', serif;
+          font-family: "Noto Serif", serif;
           font-size: 1.35rem;
-        }
-      }
-
-      .input-container {
-        position: relative;
-        padding: 20px 20px 20px 20px;
-        width: calc(100% - 40px);
-        max-width: 400px;
-
-        input {
-          position: relative;
           width: 100%;
-          font-family: 'Noto Serif', serif;
-          font-size: 1.25rem;
-          outline: none;
-          background: transparent;
-          box-shadow: none;
-          border: none;
-          border-bottom: 2px dashed #5b2d82;
-
-          &:valid + .input-label {
-            top: 8px;
-            left: 16px;
-            font-size: .7rem;
-            font-weight: normal;
-            color: #999;
-          }
-          &.wrong-input + .input-label {
-            color: red;
-          }
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
-      }
-
-      .input-label {
-        position: absolute;
-        left: 22px;
-        top: 20px;
-        font-family: 'Noto Serif', serif;
-        font-size: 1.35rem;
-        pointer-events: none;
-        transition: .2s ease-in-out;
       }
     }
   }
