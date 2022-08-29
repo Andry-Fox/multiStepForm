@@ -7,8 +7,8 @@
 
           <div class="progress-step"
           :class="{'active':index === activeStep}"
-          v-for="index in formSteps"
-          :key="'step'+index">
+          v-for="(item, index) in formSteps"
+          :key="index">
             {{ index + 1 }}
           </div>
         </div>
@@ -20,17 +20,11 @@
         <h2>{{ formSteps[activeStep].title }}</h2>
         <div class="form-box">
           <div class="input-fields">
-              <vueInput :fields="formSteps[activeStep].fields"/>
+              <vueInputs :fields="formSteps[activeStep].fields"/>
           </div>
           <div class="checkbox-container">
-            <span>{{formSteps[activeStep].subtitle}}</span>
-            <div class="flex__checkbox">
-              <div class="checkbox"
-                   v-for="(checkboxParam, index) in formSteps[activeStep].checkboxParam"
-                   :key="'checkbox'+ index">
-                <vue-checkbox>{{checkboxParam.label}}</vue-checkbox>
-              </div>
-            </div>
+            <h3>{{ formSteps[activeStep].subtitle }}</h3>
+            <vue-gender-checkbox :checkbox="formSteps[activeStep].checkbox"></vue-gender-checkbox>
           </div>
         </div>
       </section>
@@ -69,11 +63,11 @@
 </template>
 
 <script>
-import vueCheckbox from "@/components/customComponents/v-checkbox.vue"
+import vueGenderCheckbox from "@/components/customComponents/v-gendercheckbox.vue"
 import vueSelect from "@/components/customComponents/select.vue"
-import vueInput from "@/components/customComponents/v-input.vue"
+import vueInputs from "@/components/customComponents/v-inputs.vue"
 export default {
-  components: {vueSelect, vueCheckbox, vueInput},
+  components: {vueSelect, vueGenderCheckbox, vueInputs},
   data: () => {
     return {
       activeStep:0,
@@ -82,17 +76,18 @@ export default {
         {
           title: "Личная информация",
           fields: [
-            {label: "Фамилия:", value: '', valid:true,pattern:'[A-Za-zА-Яа-я]{3,}',required:true, type: 'text'},
-            {label: "Имя:", value: '', valid:true,pattern:'[A-Za-zА-Яа-я]{3,}',required:true, type:'text'},
-            {label: "Email:", value: '', valid:true,pattern:'/^[А-ЯA-Z0-9._%+-]+@[А-ЯA-Z0-9-]+.+.[A-Z]{2,4}$/i',required:false, type:'email'},
-            {label: "Дата рождения:", value: '', valid:true,pattern:/.+/,required:true, type:'date'},
-            {label: "Номер телефона:", value: '', valid:true,pattern:/.+/,required:true, type:'text'},
+            {label: "Фамилия:*", value: '', valid:'unknown',pattern:/^[a-zA-Zа-яёА-ЯЁ]+$/u,required:true, type: 'text'},
+            {label: "Имя:*", value: '', valid:'unknown',pattern:/^[a-zA-Zа-яёА-ЯЁ]+$/u,required:true, type:'text'},
+            {label: "Email:", value: '', valid:'unknown',pattern:/[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+/,required:false, type:'email'},
+            {label: "Дата рождения:*", value: '', valid:'unknown',pattern:/.+/,required:true, type:'date'},
+            {label: "Номер телефона:*", value: '', valid:'unknown',pattern:/^((8|\+7)[- ]?)?(\(?\d{3}\)?[- ]?)?[\d\- ]{7,10}$/,required:true, type:'text'},
           ],
+
           subtitle: "Ваш пол:",
-          checkboxParam: [
-            {label: "М"},
-            {label: "Ж"},
-          ],
+          checkbox: [
+            {label: "М", id: 1, value: "М",},
+            {label: "Ж", id: 2, value: "Ж",},
+          ]
         },
         {
           title: "Информация о кандидате",
@@ -162,6 +157,15 @@ export default {
     },
     checkValid() {
       let valid = true;
+      const unRequiredFields = this.formSteps[this.activeStep].fields.filter(({ required }) => required === false)
+      unRequiredFields.forEach(field => {
+        if(field.pattern.test(field.value)){
+          field.valid = true;
+        }else{
+          field.valid = 'notUsed';
+          field.value = '';
+        }
+      });
       const requiredFields = this.formSteps[this.activeStep].fields.filter(({ required }) => required === true)
       requiredFields.forEach(field => {
         if(!field.pattern.test(field.value)) {
