@@ -1,22 +1,7 @@
 <template>
   <div class="container" @click.self="close">
     <article>
-      <header>
-        <button v-if="activeStep -1 >= 0" @click="backStep">Вернутся</button>
-        <div class="progress">
-
-          <div class="progress-step"
-          :class="{'active':index === activeStep}"
-          v-for="(item, index) in formSteps"
-          :key="index">
-            {{ index + 1 }}
-          </div>
-        </div>
-        <button v-if="activeStep +1 < formSteps.length" @click="checkValid">Продолжить</button>
-        <button v-if="activeStep +1 === formSteps.length" @click="checkValid">Отправить</button>
-      </header>
-
-      <section :class="animation" v-if="activeStep === 0">
+      <section :class="animation" v-if="activeStep == 0">
         <h2>{{ formSteps[activeStep].title }}</h2>
         <div class="form-box">
           <div class="input-fields">
@@ -28,8 +13,7 @@
           </div>
         </div>
       </section>
-
-      <section :class="animation" v-if="activeStep === 1">
+      <section :class="animation" v-if="activeStep == 1">
         <h2>{{ formSteps[activeStep].title }}</h2>
         <div class="form-box">
           <div class="">
@@ -39,25 +23,34 @@
           </div>
         </div>
       </section>
-
-      <section :class="animation" v-if="activeStep === 2">
+      <section :class="animation" v-if="activeStep == 2">
         <h2>{{ formSteps[activeStep].title }}</h2>
         <div class="form-box">
 
         </div>
       </section>
-      <section :class="animation" v-if="activeStep === 3">
+      <section :class="animation" v-if="activeStep == 3">
         <h2>{{ formSteps[activeStep].title }}</h2>
         <div class="form-box">
 
         </div>
       </section>
-      <section :class="animation" v-if="activeStep === 4">
+      <section :class="animation" v-if="activeStep == 4">
         <h2>{{ formSteps[activeStep].title }}</h2>
         <div class="form-box">
 
         </div>
       </section>
+
+      <v-progress-steps
+        :activeStep="activeStep"
+        :formStep="formSteps"
+        @back-step="backStep"
+        @check-valid="checkValid"
+        @send-it="sendIt"
+      >
+
+      </v-progress-steps>
     </article>
   </div>
 </template>
@@ -66,8 +59,9 @@
 import vueGenderCheckbox from "@/components/customComponents/v-gendercheckbox.vue"
 import vueSelect from "@/components/customComponents/select.vue"
 import vueInputs from "@/components/customComponents/v-inputs.vue"
+import vProgressSteps from "@/components/customComponents/vProgressSteps"
 export default {
-  components: {vueSelect, vueGenderCheckbox, vueInputs},
+  components: {vueSelect, vueGenderCheckbox, vueInputs, vProgressSteps},
   data: () => {
     return {
       activeStep:0,
@@ -141,6 +135,9 @@ export default {
     }
   },
   methods: {
+    sendIt(){
+      console.log('Hi')
+    },
     nextStep() {
       this.animation = 'animate-out';
       setTimeout(() => {
@@ -207,80 +204,14 @@ export default {
 
   article{
     @include flexbox();
-    flex-direction: column-reverse;
+    flex-direction: column;
     margin: 10px;
     width: calc(100% - 20px);
     max-width: 720px;
     min-height: 480px;
     perspective: 1500px;
 
-    header {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      margin-top: 10px;
-      width: 450px;
-      height: 55px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 15px 30px rgba(0,0,0,.2),
-                  0 10px 20px rgb(0 0 0 / 20%);
 
-      button {
-        font-family: 'Noto Serif', serif;
-        outline: none;
-        border: none;
-        color: #fff;
-        background-color: #5b2d82;
-        font-size: 1rem;
-        border-radius: 8px;
-        height: 70%;
-        cursor: pointer;
-      }
-    }
-
-    .progress {
-      display: flex;
-    }
-    .progress-step {
-      @include flexbox();
-      margin-left: 10px;
-      position: relative;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      color: #fff;
-      background-color: #5b2d82;
-      font-weight: bold;
-
-      &.active {
-        background-color: #5b2d82;
-
-        ~ .progress-step {
-          color: #555;
-          background-color: #ccc;
-        }
-
-        ~ .progress-step::before {
-          background-color: #ccc;
-        }
-      }
-
-      &:before {
-        content: '';
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        width: 20px;
-        height: 2px;
-        background-color: #5b2d82;
-        z-index: 10;
-      }
-
-      &:first-child::before {
-        display: none;
-      }
-    }
     section {
       @include flexbox();
       flex-direction: column;
