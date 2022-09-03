@@ -2,16 +2,15 @@
   <div class="steps__box">
     <button v-if="activeStep -1 >= 0" @click="backStep">Вернутся</button>
     <div class="progress">
-
       <div class="progress-step"
            :class="{'active':index === activeStep}"
-           v-for="(item, index) in formSteps"
+           v-for="( item, index) in formStep"
            :key="index">
         {{ index + 1 }}
       </div>
     </div>
-    <button v-if="activeStep +1 < formSteps.length" @click="checkValid">Продолжить</button>
-    <button v-if="activeStep +1 === formSteps.length" @click="sendIt">Отправить</button>
+    <button v-if="activeStep +1 < formStep.length" @click="checkValid">Продолжить</button>
+    <button v-if="activeStep +1 === formStep.length" @click="sendIt">Отправить</button>
   </div>
 </template>
 
@@ -19,16 +18,11 @@
 export default {
   name: "vProgressSteps",
   props: {
-    activeStep: {
-      type: Number,
-      default() {
-        return Number;
-      }
-    },
-    formSteps: {
+    activeStep: Number,
+    formStep:{
       type: Array,
-      default () {
-        return []
+      default() {
+        return[]
       }
     }
   },

@@ -46,7 +46,7 @@
         :activeStep="activeStep"
         :formStep="formSteps"
         @back-step="backStep"
-        @check-valid="checkValid"
+        @check-valid="nextStep"
         @send-it="sendIt"
       >
 
@@ -247,25 +247,6 @@ export default {
         align-items: center;
         padding: 20px 0;
         min-width: 250px;
-
-        .flex__checkbox {
-          display: flex;
-          flex-grow: 1;
-        }
-        .h2 {
-          font-family: 'Noto Serif', serif;
-          font-size: 1.35rem;
-          pointer-events: none;
-        }
-
-        .checkbox {
-          font-family: "Noto Serif", serif;
-          font-size: 1.35rem;
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
       }
     }
   }
