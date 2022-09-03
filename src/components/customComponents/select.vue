@@ -135,30 +135,29 @@ export default {
   .option-container {
     min-width: 150px;
     position: fixed;
-    top: 125px;
-    right: 170px;
-
+    top: 80px;
+    right: -120px;
     padding: 10px;
-
     box-sizing: border-box;
-    border: solid 3px #ab83ce;
-    border-radius: 25px;
-    background-color: #760ec8;
-
+    border-radius: 15px;
+    background-color: #5d1695;
     display: flex;
     flex-direction: column;
+    border: 1px solid white;
 
     .option {
-      border: solid 3px #760ec8;
-      padding: 0px 8px;
+      border: solid 2px #ffffff;
+      margin: 4px;
+      border-radius: 25px;
       color: white;
-      font-family: 'Noto Serif', serif;
+      font-family: "Noto Serif", serif;
       font-size: 15px;
+      padding: 0px 12px;
+      font-weight: 600;
+
       &:hover {
-        background-color: #ab83ce;
-        border: solid 3px #ffffff;
-        border-radius: 25px;
-        color: #760ec8;
+        background-color: #c0a1db;
+        color: #5d1695;
       }
     }
   }

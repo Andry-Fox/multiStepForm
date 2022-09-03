@@ -20,6 +20,9 @@
             <vueSelect
               :options="formSteps[activeStep].options"
             />
+            <v-multi-select
+              :multiOptions="formSteps[activeStep].multiOptions"
+            />
           </div>
         </div>
       </section>
@@ -60,8 +63,9 @@ import vueGenderCheckbox from "@/components/customComponents/v-gendercheckbox.vu
 import vueSelect from "@/components/customComponents/select.vue"
 import vueInputs from "@/components/customComponents/v-inputs.vue"
 import vProgressSteps from "@/components/customComponents/vProgressSteps"
+import vMultiSelect from "@/components/customComponents/v-multiselect"
 export default {
-  components: {vueSelect, vueGenderCheckbox, vueInputs, vProgressSteps},
+  components: {vueSelect, vueGenderCheckbox, vueInputs, vProgressSteps,vMultiSelect},
   data: () => {
     return {
       activeStep:0,
@@ -96,12 +100,11 @@ export default {
           ],
           multiSelector: {name: "Знакомые фреймворки:"},
           multiOptions: [
-            {value: 'Среднее',},
-            {value: 'Средне-специальное',},
-            {value: 'Неоконченное высшее',},
-            {value: 'Бакалавр',},
-            {value: 'Магистрант',},
-            {value: 'Аспирант',},
+            {value: 'Vue',},
+            {value: 'React',},
+            {value: 'Angular',},
+            {value: 'Svelte',},
+            {value: 'Ember.js',},
           ],
           h2: "Смс оповещение:",
           checkbox: [
@@ -226,7 +229,8 @@ export default {
         flex-grow: 1;
         width: 100%;
 
-        @include flexbox();
+        display: flex;
+        align-items: center;
         flex-direction: column;
       }
 
