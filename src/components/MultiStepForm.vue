@@ -29,7 +29,13 @@
       <section :class="animation" v-if="activeStep == 2">
         <h2>{{ formSteps[activeStep].title }}</h2>
         <div class="form-box">
+          <vue-textarea
+            :textarea="formSteps[activeStep].textarea"
+            @delete-input="deleteThisField"
+            @create-input="createInput"
+            >
 
+          </vue-textarea>
         </div>
       </section>
       <section :class="animation" v-if="activeStep == 3">
@@ -64,8 +70,9 @@ import vueSelect from "@/components/customComponents/select.vue"
 import vueInputs from "@/components/customComponents/v-inputs.vue"
 import vProgressSteps from "@/components/customComponents/vProgressSteps"
 import vMultiSelect from "@/components/customComponents/v-multiselect"
+import vueTextarea from "@/components/customComponents/v-textArea"
 export default {
-  components: {vueSelect, vueGenderCheckbox, vueInputs, vProgressSteps,vMultiSelect},
+  components: {vueSelect, vueGenderCheckbox, vueInputs, vProgressSteps,vMultiSelect,vueTextarea},
   data: () => {
     return {
       activeStep:0,
@@ -113,12 +120,9 @@ export default {
         },
         {
           title: "Опыт работы",
-          fields: [
-            {label: "Some some some some some", value: '', valid:true,pattern:/.+/},
-            {label: "Some some some some some", value: '', valid:true,pattern:/.+/},
-            {label: "Some some some some some", value: '', valid:true,pattern:/.+/},
-            {label: "Some some some some some", value: '', valid:true,pattern:/.+/},
-            {label: "Some some some some some", value: '', valid:true,pattern:/.+/},
+          fields: [],
+          textarea:[
+            {label: 'Ваш опыт работы', value: ''}
           ]
         },
         {
@@ -138,6 +142,14 @@ export default {
     }
   },
   methods: {
+    createInput(){
+      this.formSteps[this.activeStep].textarea.push({label: 'Ваш опыт работы', value: ''})
+    },
+    deleteThisField(index){
+      this.formSteps[this.activeStep].textarea.splice(1,1)
+      console.log(index)
+      console.log(this.formSteps[this.activeStep].textarea)
+    },
     sendIt(){
       console.log('Hi')
     },
@@ -186,7 +198,8 @@ export default {
         }, 600);
       }
     }
-  }
+  },
+
 }
 </script>
 
