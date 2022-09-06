@@ -7,7 +7,7 @@
         class="body"
       >
         <span class="item">{{ option.value }}</span>
-        <img class="button" src="@/image/cross-svgrepo-com.svg">
+        <img class="button" src="@/image/cross-svgrepo-com.svg" @click="deleteOption(index)">
       </div>
     </div>
     <button class="button__open__option" @click="optionRemove">opn</button>
@@ -42,6 +42,9 @@ export default {
     }
   },
   methods: {
+    deleteOption(index){
+      this.multiSelectItem.splice(index,1)
+    },
     checkIsIn(option){
       let isIn;
       isIn = this.multiSelectItem.some(item => item.value === option.value)
